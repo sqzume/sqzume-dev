@@ -48,6 +48,9 @@ body {
   /* 和文は欧文より行間を広く取らないと読めない */
   line-height: 1.9;
   font-feature-settings: "palt"; /* 和文の約物を詰める */
+  /* 実物の Bold / Italic を持っているので、ブラウザに偽物を作らせない。
+     欠けているウェイトがあれば目立って壊れるほうが、静かに劣化するより良い。 */
+  font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   min-height: 100dvh;
   display: flex;

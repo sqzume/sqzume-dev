@@ -32,12 +32,9 @@
   /* ── 書体 ───────────────────────────────────
      和文書体がこのサイトの個性の主軸。
      見出しは明朝、本文はゴシック、メタ情報は等幅で書き分ける。 */
-  --font-display: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho",
-    "Noto Serif CJK JP", "Noto Serif JP", serif;
-  --font-body: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "BIZ UDPGothic",
-    "Yu Gothic", "Noto Sans CJK JP", "Noto Sans JP", system-ui, sans-serif;
-  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Menlo",
-    "Consolas", monospace;
+  --font-display: var(--font-shippori);
+  --font-body: var(--font-zen-kaku);
+  --font-mono: var(--font-commit-mono);
 
   /* ── 寸法 ───────────────────────────────────── */
   --radius: 4px; /* 丸めない。輪郭をはっきりさせる */
