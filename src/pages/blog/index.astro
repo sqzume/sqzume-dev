@@ -1,0 +1,144 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPosts } from "../../lib/posts";
+import { formatDate, isoDate } from "../../lib/format";
+
+const posts = await getPosts();
+---
+
+<BaseLayout
+  title="ブログ"
+  description="sqzume が書いた記事の一覧。技術のことも、そうでないことも。"
+>
+  <h1 class="page-title">ブログ</h1>
+  <p class="lede">日頃やっていることを書いています。全 {posts.length} 件。</p>
+
+  <ul class="posts">
+    {
+      posts.map((post) => (
+        <li>
+          <a href={`/blog/${post.id}`} class="card">
+            <time datetime={isoDate(post.data.pubDate)}>
+              {formatDate(post.data.pubDate)}
+            </time>
+            <h2>{post.data.title}</h2>
+            <p>{post.data.description}</p>
+            {post.data.tags.length > 0 && (
+              <ul class="tags">
+                {post.data.tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+            )}
+            {post.data.draft && <span class="draft">下書き</span>}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
+
+<style>
+  .page-title {
+    font-size: clamp(1.9rem, 5vw, 2.5rem);
+  }
+
+  .lede {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .posts {
+    margin-top: 2.5rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  /* 即応 UI: カード全体が触れる対象であることを、
+     境界とアクセントの左線で即座に示す */
+  .card {
+    display: block;
+    position: relative;
+    padding: 1.25rem 1.4rem;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: inherit;
+    transition: background-color var(--speed) var(--ease),
+      border-color var(--speed) var(--ease);
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: -1px auto -1px -1px;
+    width: 2px;
+    background: var(--accent);
+    border-radius: var(--radius) 0 0 var(--radius);
+    opacity: 0;
+    transition: opacity var(--speed) var(--ease);
+  }
+
+  .card:hover {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+  }
+
+  .card:hover::before {
+    opacity: 1;
+  }
+
+  .card time {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .card h2 {
+    font-size: 1.2rem;
+    margin-top: 0.35rem;
+    transition: color var(--speed) var(--ease);
+  }
+
+  .card:hover h2 {
+    color: var(--accent);
+  }
+
+  .card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.4rem;
+    max-width: var(--measure);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+  }
+
+  .tags li {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.1rem 0.45rem;
+  }
+
+  .draft {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    border: 1px solid var(--accent-surface);
+    background: var(--accent-surface);
+    border-radius: var(--radius);
+    padding: 0.1rem 0.45rem;
+  }
+</style>

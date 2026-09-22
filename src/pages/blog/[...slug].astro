@@ -1,0 +1,283 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPosts } from "../../lib/posts";
+import { formatDate, isoDate } from "../../lib/format";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+// 目次は h2 と h3 のみ。h4 まで拾うと目次が本文より長くなる
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+>
+  <article>
+    <header class="head">
+      <div class="meta">
+        <time datetime={isoDate(post.data.pubDate)}>
+          {formatDate(post.data.pubDate)}
+        </time>
+        {
+          post.data.updatedDate && (
+            <span class="updated">
+              {formatDate(post.data.updatedDate)} に更新
+            </span>
+          )
+        }
+        {post.data.draft && <span class="draft">下書き</span>}
+      </div>
+      <h1>{post.data.title}</h1>
+      <p class="description">{post.data.description}</p>
+      {
+        post.data.tags.length > 0 && (
+          <ul class="tags">
+            {post.data.tags.map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    <div class="grid">
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        toc.length > 1 && (
+          <aside class="toc" aria-label="目次">
+            <p class="toc-title">目次</p>
+            <ul>
+              {toc.map((h) => (
+                <li class={h.depth === 3 ? "nested" : undefined}>
+                  <a href={`#${h.slug}`}>{h.text}</a>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+    </div>
+
+    <footer class="foot">
+      <a href="/blog" class="back">&larr; 記事一覧へ</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  /* ── 記事ヘッダー ───────────────────────────── */
+  .head {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .updated::before {
+    content: "/ ";
+  }
+
+  .draft {
+    color: var(--accent);
+    border: 1px solid var(--accent-surface);
+    background: var(--accent-surface);
+    border-radius: var(--radius);
+    padding: 0.1rem 0.45rem;
+  }
+
+  .head h1 {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    margin-top: 0.6rem;
+    max-width: var(--measure);
+  }
+
+  .description {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-top: 0.75rem;
+    max-width: var(--measure);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.1rem;
+  }
+
+  .tags li {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.12rem 0.5rem;
+  }
+
+  /* ── 本文と目次の配置 ───────────────────────── */
+  .grid {
+    margin-top: 2.5rem;
+  }
+
+  @media (min-width: 60rem) {
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 13rem;
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 5rem;
+      order: 2;
+    }
+  }
+
+  /* ── 目次 ───────────────────────────────────── */
+  .toc {
+    border-left: 1px solid var(--border);
+    padding-left: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .toc-title {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .toc ul {
+    margin-top: 0.6rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .toc li.nested {
+    padding-left: 0.9rem;
+  }
+
+  .toc a {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--speed) var(--ease);
+  }
+
+  .toc a:hover {
+    color: var(--accent);
+  }
+
+  /* ── 本文の組版 ─────────────────────────────
+     和文の可読性がこのサイトの品質のほぼ全て。
+     行長は --measure、行間は 1.9 を基準にする。 */
+  .prose {
+    max-width: var(--measure);
+    font-size: 1rem;
+  }
+
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol),
+  .prose :global(pre),
+  .prose :global(blockquote) {
+    margin-top: 1.5rem;
+  }
+
+  .prose :global(h2) {
+    font-size: 1.4rem;
+    margin-top: 3rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .prose :global(h3) {
+    font-size: 1.15rem;
+    margin-top: 2.2rem;
+  }
+
+  .prose :global(strong) {
+    color: var(--text-strong);
+    font-weight: 600;
+  }
+
+  .prose :global(ul) {
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .prose :global(ul li) {
+    position: relative;
+    padding-left: 1.2rem;
+  }
+
+  /* 箇条書きの点にもアクセントを使い、画面全体の色数を増やさない */
+  .prose :global(ul li)::before {
+    content: "";
+    position: absolute;
+    left: 0.15rem;
+    top: 0.85em;
+    width: 0.3rem;
+    height: 1px;
+    background: var(--accent-dim);
+  }
+
+  .prose :global(ol) {
+    list-style: decimal;
+    padding-left: 1.4rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .prose :global(blockquote) {
+    border-left: 2px solid var(--border-strong);
+    padding-left: 1.2rem;
+    color: var(--text-muted);
+  }
+
+  /* ── 記事フッター ───────────────────────────── */
+  .foot {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .back {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: color var(--speed) var(--ease);
+  }
+
+  .back:hover {
+    color: var(--accent);
+  }
+</style>
