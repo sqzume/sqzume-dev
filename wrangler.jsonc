@@ -1,0 +1,12 @@
+{
+  // Cloudflare Workers（Static Assets）へのデプロイ設定。
+  // サーバ側のコードを持たない純粋な静的サイトなので `main` は指定しない。
+  "name": "sqzume-dev",
+  "compatibility_date": "2026-09-22",
+  "assets": {
+    "directory": "./dist",
+    // 存在しないパスは 404.html を 404 ステータスで返す。
+    // SPA ではないので "single-page-application" は使わない。
+    "not_found_handling": "404-page"
+  }
+}
