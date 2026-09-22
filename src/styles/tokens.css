@@ -1,0 +1,52 @@
+/*
+ * デザイントークン。
+ * このサイトの色・書体・寸法はすべてここで定義する。
+ * ダークテーマ一本だが、将来ライトを足す場合はこのファイルの値を差し替えるだけで済む。
+ */
+:root {
+  color-scheme: dark;
+
+  /* ── サーフェス階層 ──────────────────────────────
+     ページ間でテーマを切り替える代わりに、暗い背景の上に
+     一段明るい面を重ねることで奥行きを作る。 */
+  --surface-0: oklch(0.17 0.006 265); /* ページ背景 */
+  --surface-1: oklch(0.21 0.008 265); /* カード、コードブロック */
+  --surface-2: oklch(0.26 0.010 265); /* さらに上の面、ホバー時 */
+
+  /* ── テキスト ───────────────────────────────── */
+  --text-strong: oklch(0.96 0.003 265); /* 見出し */
+  --text: oklch(0.83 0.006 265); /* 本文 */
+  --text-muted: oklch(0.64 0.010 265); /* 日付、補足 */
+
+  /* ── 境界 ───────────────────────────────────── */
+  --border: oklch(0.31 0.008 265);
+  --border-strong: oklch(0.44 0.012 265);
+
+  /* ── アクセント ──────────────────────────────
+     「触れる場所」を示す唯一の高輝度色。
+     リンク・ホバー・フォーカスにのみ使い、装飾には使わない。 */
+  --accent: oklch(0.83 0.14 78);
+  --accent-dim: oklch(0.64 0.11 78);
+  --accent-surface: oklch(0.30 0.045 78);
+
+  /* ── 書体 ───────────────────────────────────
+     和文書体がこのサイトの個性の主軸。
+     見出しは明朝、本文はゴシック、メタ情報は等幅で書き分ける。 */
+  --font-display: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho",
+    "Noto Serif CJK JP", "Noto Serif JP", serif;
+  --font-body: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "BIZ UDPGothic",
+    "Yu Gothic", "Noto Sans CJK JP", "Noto Sans JP", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Menlo",
+    "Consolas", monospace;
+
+  /* ── 寸法 ───────────────────────────────────── */
+  --radius: 4px; /* 丸めない。輪郭をはっきりさせる */
+  --measure: 36rem; /* 本文の行長 */
+  --page: 64rem; /* ページ全体の最大幅 */
+
+  /* ── 即応 UI ────────────────────────────────
+     入力に対して 100ms 前後で視覚的な返事を返す。
+     これはアニメーションではなくフィードバックである。 */
+  --speed: 120ms;
+  --ease: cubic-bezier(0.2, 0, 0.1, 1);
+}
