@@ -42,19 +42,21 @@ const posts = (await getPosts()).slice(0, 3);
     </p>
   </section>
 
-  <section class="recent">
-    <div class="recent-head">
-      <h2>最近の記事</h2>
-      <a href="/blog/" class="more">
-        すべて見る
-      </a>
-    </div>
-    <ul class="posts">
-      {posts.map((post) => (
-        <PostCard post={post} />
-      ))}
-    </ul>
-  </section>
+  {posts.length > 0 && (
+    <section class="recent">
+      <div class="recent-head">
+        <h2>最近の記事</h2>
+        <a href="/blog/" class="more">
+          すべて見る
+        </a>
+      </div>
+      <ul class="posts">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </ul>
+    </section>
+  )}
 </BaseLayout>
 
 <style>

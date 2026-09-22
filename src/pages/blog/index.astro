@@ -11,13 +11,20 @@ const posts = await getPosts();
   description="sqzume が書いた記事の一覧。技術のことも、そうでないことも。"
 >
   <h1 class="page-title">ブログ</h1>
-  <p class="lede">日頃やっていることを書いています。全 {posts.length} 件。</p>
+  <p class="lede">
+    日頃やっていることを書いています。
+    {posts.length > 0 && `全 ${posts.length} 件。`}
+  </p>
 
-  <ul class="posts">
-    {posts.map((post) => (
-      <PostCard post={post} />
-    ))}
-  </ul>
+  {posts.length > 0 ? (
+    <ul class="posts">
+      {posts.map((post) => (
+        <PostCard post={post} />
+      ))}
+    </ul>
+  ) : (
+    <p class="empty">まだ記事がありません。</p>
+  )}
 </BaseLayout>
 
 <style>
@@ -35,5 +42,16 @@ const posts = await getPosts();
     margin-top: 2.5rem;
     display: grid;
     gap: 1.25rem;
+  }
+
+  .empty {
+    margin-top: 2.5rem;
+    padding: 2.25rem 1.4rem;
+    background: var(--surface-1);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-align: center;
   }
 </style>
