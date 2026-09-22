@@ -1,0 +1,7 @@
+# Cloudflare Workers（Static Assets）のレスポンスヘッダ設定。
+# 既定は `public, max-age=0, must-revalidate` で、全アセットが毎回再検証される。
+
+# /_astro/ 配下はファイル名にハッシュが付いた不変ファイル。
+# 内容が変わればファイル名も変わるので、1 年間キャッシュして再検証させない。
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
