@@ -1,0 +1,97 @@
+---
+const path = Astro.url.pathname;
+const links = [
+  { href: "/", label: "ホーム" },
+  { href: "/blog", label: "ブログ" },
+];
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path.startsWith(href);
+---
+
+<header>
+  <div class="inner">
+    <a href="/" class="brand">sqzume<span>.dev</span></a>
+    <nav aria-label="サイト">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            class="nav-link"
+            aria-current={isActive(link.href) ? "page" : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-0);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .inner {
+    max-width: var(--page);
+    margin-inline: auto;
+    padding: 0.85rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .brand {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-strong);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color var(--speed) var(--ease);
+  }
+
+  .brand span {
+    color: var(--text-muted);
+    transition: color var(--speed) var(--ease);
+  }
+
+  .brand:hover span {
+    color: var(--accent);
+  }
+
+  nav {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  /* 即応 UI: hover で面が立ち上がり、境界が現れる */
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    transition: color var(--speed) var(--ease),
+      background-color var(--speed) var(--ease),
+      border-color var(--speed) var(--ease);
+  }
+
+  .nav-link:hover {
+    color: var(--text-strong);
+    background: var(--surface-1);
+    border-color: var(--border);
+  }
+
+  .nav-link[aria-current="page"] {
+    color: var(--accent);
+    border-color: var(--accent-surface);
+    background: color-mix(in oklch, var(--accent-surface) 40%, transparent);
+  }
+</style>
