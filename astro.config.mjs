@@ -1,11 +1,14 @@
 // @ts-check
 import { defineConfig, fontProviders } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 
 const FONT_DIR = "./src/assets/fonts";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://sqzume.dev",
+
+  integrations: [sitemap()],
 
   fonts: [
     // 英数字と装飾。カスタムビルド（NL = リガチャなし）をリポジトリから配信する
