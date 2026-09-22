@@ -10,7 +10,7 @@ const { post } = Astro.props;
 ---
 
 <li class="item">
-  <a href={`/blog/${post.id}`} class="card">
+  <a href={`/blog/${post.id}/`} class="card">
     <time datetime={isoDate(post.data.pubDate)}>
       {formatDate(post.data.pubDate)}
     </time>
@@ -22,7 +22,7 @@ const { post } = Astro.props;
     <ul class="tags">
       {post.data.tags.map((tag) => (
         <li>
-          <a href={`/tags/${tag}`}>{tag}</a>
+          <a href={`/tags/${tag}/`}>{tag}</a>
         </li>
       ))}
     </ul>
