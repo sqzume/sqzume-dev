@@ -18,7 +18,9 @@ export default defineConfig({
       cssVariable: "--font-commit-mono",
       // 生成側の設定に合わせた字形。切ると別のフォントに見える
       featureSettings: '"ss01" 1, "ss02" 1, "ss04" 1, "ss05" 1, "calt" 1',
-      fallbacks: ["ui-monospace", "monospace"],
+      // 汎用フォールバックは付けない。和文フォールバックの順序を
+      // tokens.css 側（--font-mono）で一括管理するため。
+      fallbacks: [],
       options: {
         variants: [
           {

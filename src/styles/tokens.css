@@ -34,7 +34,11 @@
      見出しは明朝、本文はゴシック、メタ情報は等幅で書き分ける。 */
   --font-display: var(--font-shippori);
   --font-body: var(--font-zen-kaku);
-  --font-mono: var(--font-commit-mono);
+  /* CommitMono NL は和文字形を持たない。
+     和文を含む要素でも書き直さずに済むよう、CSS のフォントフォールバックで
+     文字単位に振り分ける: 英数字・記号は CommitMono、和文は Zen Kaku Gothic New。 */
+  --font-mono:
+    var(--font-commit-mono), var(--font-zen-kaku), ui-monospace, monospace;
 
   /* ── 寸法 ───────────────────────────────────── */
   --radius: 4px; /* 丸めない。輪郭をはっきりさせる */
