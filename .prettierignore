@@ -1,0 +1,5 @@
+# 生成物・依存（.gitignore の内容は Prettier が既定で読むので、ここは追加分のみ）
+package-lock.json
+
+# フォントとライセンス原文は整形対象にしない
+src/assets/fonts/
