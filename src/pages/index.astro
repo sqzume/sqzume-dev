@@ -1,9 +1,237 @@
 ---
-// ここにJS/TSを書けます
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostCard from "../components/PostCard.astro";
+import { getPosts } from "../lib/posts";
+
+const posts = (await getPosts()).slice(0, 3);
 ---
 
-<html lang="ja">
-    <body>
-        <h1>Hello, Astro!</h1>
-    </body>
-</html>
+<BaseLayout
+  title="sqzume.dev"
+  description="sqzume の個人サイト。日頃やっていることを書いています。"
+>
+  <section class="hero">
+    <div class="hero-main">
+      <p class="eyebrow">個人サイト</p>
+
+      <h1 class="name">
+        sqzume<span class="dot">.</span>dev
+      </h1>
+
+      <!-- TODO: 本人による差し替えが必要な箇所 -->
+      <div class="intro">
+        <p>
+          ソフトウェアを書いています。手元の環境をいじることと、
+          うまくいかなかった過程を書き残すことが好きです。
+        </p>
+        <p>
+          ここには日頃やっていることを、技術のこともそうでないことも
+          まとめて置いています。
+        </p>
+      </div>
+
+      <div class="actions">
+        <a href="/blog" class="action primary">
+          ブログを読む
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+        <a href="https://github.com/sqzume" class="action" rel="me noopener">
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- 縦書きの銘。装飾なので読み上げからは外す -->
+    <p class="vertical" aria-hidden="true">日々のこと、手を動かしたこと</p>
+  </section>
+
+  <section class="recent">
+    <div class="recent-head">
+      <h2>最近の記事</h2>
+      <a href="/blog" class="more">すべて見る</a>
+    </div>
+    <ul class="posts">
+      {posts.map((post) => <PostCard post={post} />)}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ── ヒーロー ─────────────────────────────────
+     点線グリッドと四隅のマーカーで「計器」の質感を出す。
+     すべて CSS のみで、JS も画像も使わない。 */
+  .hero {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: clamp(2.5rem, 8vw, 5rem) clamp(1.25rem, 5vw, 3rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background-color: var(--surface-1);
+    background-image: radial-gradient(
+      var(--border) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+    background-position: center;
+  }
+
+  /* 四隅のマーカー */
+  .hero::before,
+  .hero::after {
+    content: "+";
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1;
+    color: var(--border-strong);
+  }
+
+  .hero::before {
+    top: 0.4rem;
+    left: 0.5rem;
+  }
+
+  .hero::after {
+    bottom: 0.4rem;
+    right: 0.5rem;
+  }
+
+  .hero-main {
+    position: relative;
+    max-width: var(--measure);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* 名乗りは明朝。このサイトで一番大きな文字 */
+  .name {
+    font-size: clamp(2.6rem, 11vw, 4.5rem);
+    line-height: 1.1;
+    margin-top: 0.6rem;
+    letter-spacing: 0.01em;
+  }
+
+  .name .dot {
+    color: var(--accent);
+  }
+
+  .intro {
+    margin-top: 1.75rem;
+    display: grid;
+    gap: 0.9rem;
+    font-size: 0.97rem;
+  }
+
+  /* ── 導線 ───────────────────────────────────── */
+  .actions {
+    margin-top: 2.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  /* 即応 UI: 触れた瞬間に面が立ち上がり、矢印が前に出る */
+  .action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    text-decoration: none;
+    color: var(--text-strong);
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 0.55rem 1rem;
+    transition: background-color var(--speed) var(--ease),
+      border-color var(--speed) var(--ease), color var(--speed) var(--ease);
+  }
+
+  .action span {
+    display: inline-block;
+    transition: transform var(--speed) var(--ease);
+  }
+
+  .action:hover span {
+    transform: translateX(3px);
+  }
+
+  .action:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .action.primary {
+    background: var(--accent-surface);
+    border-color: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  .action.primary:hover {
+    background: color-mix(in oklch, var(--accent-surface) 130%, transparent);
+  }
+
+  /* ── 縦書きの銘 ─────────────────────────────
+     日本語のサイトであることが、そのまま個性になる要素。 */
+  .vertical {
+    writing-mode: vertical-rl;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    letter-spacing: 0.25em;
+    color: var(--text-muted);
+    border-right: 1px solid var(--border);
+    padding-right: 1.25rem;
+    margin-block: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 48rem) {
+    .vertical {
+      display: none;
+    }
+  }
+
+  /* ── 最近の記事 ─────────────────────────────── */
+  .recent {
+    margin-top: 4rem;
+  }
+
+  .recent-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .recent-head h2 {
+    font-size: 1.3rem;
+  }
+
+  .more {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: color var(--speed) var(--ease);
+  }
+
+  .more:hover {
+    color: var(--accent);
+  }
+
+  .posts {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 1.25rem;
+  }
+</style>
