@@ -18,17 +18,15 @@ const { post } = Astro.props;
     <p>{post.data.description}</p>
     {post.data.draft && <span class="draft">下書き</span>}
   </a>
-  {
-    post.data.tags.length > 0 && (
-      <ul class="tags">
-        {post.data.tags.map((tag) => (
-          <li>
-            <a href={`/tags/${tag}`}>{tag}</a>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+  {post.data.tags.length > 0 && (
+    <ul class="tags">
+      {post.data.tags.map((tag) => (
+        <li>
+          <a href={`/tags/${tag}`}>{tag}</a>
+        </li>
+      ))}
+    </ul>
+  )}
 </li>
 
 <style>
@@ -47,7 +45,8 @@ const { post } = Astro.props;
     border-radius: var(--radius);
     text-decoration: none;
     color: inherit;
-    transition: background-color var(--speed) var(--ease),
+    transition:
+      background-color var(--speed) var(--ease),
       border-color var(--speed) var(--ease);
   }
 
@@ -126,7 +125,8 @@ const { post } = Astro.props;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 0.1rem 0.45rem;
-    transition: color var(--speed) var(--ease),
+    transition:
+      color var(--speed) var(--ease),
       border-color var(--speed) var(--ease),
       background-color var(--speed) var(--ease);
   }

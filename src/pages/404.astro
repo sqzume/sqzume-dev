@@ -10,15 +10,17 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <p class="code">404</p>
     <h1>ページが見つかりません</h1>
     <p class="lede">
-      お探しのページは存在しないか、移動した可能性があります。
-      URL の打ち間違いでなければ、記事一覧から探してみてください。
+      お探しのページは存在しないか、移動した可能性があります。 URL
+      の打ち間違いでなければ、記事一覧から探してみてください。
     </p>
     <div class="actions">
       <a href="/blog" class="action primary">
         記事一覧へ
         <span aria-hidden="true">&rarr;</span>
       </a>
-      <a href="/" class="action">ホームへ</a>
+      <a href="/" class="action">
+        ホームへ
+      </a>
     </div>
   </section>
 </BaseLayout>
@@ -65,8 +67,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     border: 1px solid var(--border-strong);
     border-radius: var(--radius);
     padding: 0.55rem 1rem;
-    transition: background-color var(--speed) var(--ease),
-      border-color var(--speed) var(--ease), color var(--speed) var(--ease);
+    transition:
+      background-color var(--speed) var(--ease),
+      border-color var(--speed) var(--ease),
+      color var(--speed) var(--ease);
   }
 
   .action span {

@@ -30,26 +30,22 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
         <time datetime={isoDate(post.data.pubDate)}>
           {formatDate(post.data.pubDate)}
         </time>
-        {
-          post.data.updatedDate && (
-            <span class="updated">
-              {formatDate(post.data.updatedDate)} に更新
-            </span>
-          )
-        }
+        {post.data.updatedDate && (
+          <span class="updated">
+            {formatDate(post.data.updatedDate)} に更新
+          </span>
+        )}
         {post.data.draft && <span class="draft">下書き</span>}
       </div>
       <h1>{post.data.title}</h1>
       <p class="description">{post.data.description}</p>
-      {
-        post.data.tags.length > 0 && (
-          <ul class="tags">
-            {post.data.tags.map((tag) => (
-              <li>{tag}</li>
-            ))}
-          </ul>
-        )
-      }
+      {post.data.tags.length > 0 && (
+        <ul class="tags">
+          {post.data.tags.map((tag) => (
+            <li>{tag}</li>
+          ))}
+        </ul>
+      )}
     </header>
 
     <div class="grid">
@@ -57,24 +53,24 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
         <Content />
       </div>
 
-      {
-        toc.length > 1 && (
-          <aside class="toc" aria-label="目次">
-            <p class="toc-title">目次</p>
-            <ul>
-              {toc.map((h) => (
-                <li class={h.depth === 3 ? "nested" : undefined}>
-                  <a href={`#${h.slug}`}>{h.text}</a>
-                </li>
-              ))}
-            </ul>
-          </aside>
-        )
-      }
+      {toc.length > 1 && (
+        <aside class="toc" aria-label="目次">
+          <p class="toc-title">目次</p>
+          <ul>
+            {toc.map((h) => (
+              <li class={h.depth === 3 ? "nested" : undefined}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
     </div>
 
     <footer class="foot">
-      <a href="/blog" class="back">&larr; 記事一覧へ</a>
+      <a href="/blog" class="back">
+        &larr; 記事一覧へ
+      </a>
     </footer>
   </article>
 </BaseLayout>

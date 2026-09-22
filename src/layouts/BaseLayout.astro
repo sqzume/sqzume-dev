@@ -36,7 +36,12 @@ const fullTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={SITE_NAME}
+      href="/rss.xml"
+    />
 
     <!-- フォントはすべて自分のドメインから配信する。第三者への接続は発生しない。
          CommitMono のみプリロードする（ヘッダーで即座に使われ、欧文なので軽い）。

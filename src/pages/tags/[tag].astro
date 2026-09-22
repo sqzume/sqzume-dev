@@ -34,11 +34,15 @@ const { tag, posts } = Astro.props;
   <p class="lede">{posts.length} 件の記事</p>
 
   <ul class="posts">
-    {posts.map((post) => <PostCard post={post} />)}
+    {posts.map((post) => (
+      <PostCard post={post} />
+    ))}
   </ul>
 
   <p class="back-wrap">
-    <a href="/blog" class="back">&larr; すべての記事へ</a>
+    <a href="/blog" class="back">
+      &larr; すべての記事へ
+    </a>
   </p>
 </BaseLayout>
 

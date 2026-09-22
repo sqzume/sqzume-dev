@@ -28,8 +28,8 @@ URL は `/blog/[slug]` にして、日付を含めないことにした。`/blog
 ```css
 :root {
   --surface-0: oklch(0.17 0.008 265);
-  --text: oklch(0.80 0.008 265);
-  --accent: oklch(0.80 0.14 75);
+  --text: oklch(0.8 0.008 265);
+  --accent: oklch(0.8 0.14 75);
 }
 ```
 

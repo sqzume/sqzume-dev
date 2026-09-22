@@ -42,16 +42,22 @@ const posts = (await getPosts()).slice(0, 3);
     </div>
 
     <!-- 縦書きの銘。装飾なので読み上げからは外す -->
-    <p class="vertical" aria-hidden="true">日々のこと、手を動かしたこと</p>
+    <p class="vertical" aria-hidden="true">
+      日々のこと、手を動かしたこと
+    </p>
   </section>
 
   <section class="recent">
     <div class="recent-head">
       <h2>最近の記事</h2>
-      <a href="/blog" class="more">すべて見る</a>
+      <a href="/blog" class="more">
+        すべて見る
+      </a>
     </div>
     <ul class="posts">
-      {posts.map((post) => <PostCard post={post} />)}
+      {posts.map((post) => (
+        <PostCard post={post} />
+      ))}
     </ul>
   </section>
 </BaseLayout>
@@ -69,10 +75,7 @@ const posts = (await getPosts()).slice(0, 3);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background-color: var(--surface-1);
-    background-image: radial-gradient(
-      var(--border) 1px,
-      transparent 1px
-    );
+    background-image: radial-gradient(var(--border) 1px, transparent 1px);
     background-size: 22px 22px;
     background-position: center;
   }
@@ -151,8 +154,10 @@ const posts = (await getPosts()).slice(0, 3);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius);
     padding: 0.55rem 1rem;
-    transition: background-color var(--speed) var(--ease),
-      border-color var(--speed) var(--ease), color var(--speed) var(--ease);
+    transition:
+      background-color var(--speed) var(--ease),
+      border-color var(--speed) var(--ease),
+      color var(--speed) var(--ease);
   }
 
   .action span {

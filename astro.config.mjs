@@ -53,7 +53,11 @@ export default defineConfig({
       weights: [400, 700],
       styles: ["normal"],
       subsets: ["japanese", "latin"],
-      fallbacks: ["Hiragino Kaku Gothic ProN", "Noto Sans CJK JP", "sans-serif"],
+      fallbacks: [
+        "Hiragino Kaku Gothic ProN",
+        "Noto Sans CJK JP",
+        "sans-serif",
+      ],
     },
 
     // 見出しの明朝

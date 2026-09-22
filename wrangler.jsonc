@@ -7,6 +7,6 @@
     "directory": "./dist",
     // 存在しないパスは 404.html を 404 ステータスで返す。
     // SPA ではないので "single-page-application" は使わない。
-    "not_found_handling": "404-page"
-  }
+    "not_found_handling": "404-page",
+  },
 }
