@@ -1,0 +1,256 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import { formatDate, isoDate } from "../lib/format";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, tags, draft, cover } = post.data;
+const href = `/blog/${post.id}/`;
+
+// タグは先頭の数個だけ出し、残りは件数にまとめる。
+// 実際の幅に合わせて数を決めるには JS が要るので、数で区切る。
+const MAX_TAGS = 2;
+const shownTags = tags.slice(0, MAX_TAGS);
+const restTags = tags.slice(MAX_TAGS);
+---
+
+<!-- 横に並べる記事のカード。上から画像・タイトル・説明文・タグと日付。
+     カードの高さを揃えるため、タイトルは 1 行、説明文は 2 行、タグは 1 行に固定する。
+     画像はタイトルの飾りなので alt は空にし、読み上げはタイトルに任せる。 -->
+<li class="tile">
+  <div class="thumb">
+    {cover ? (
+      <Image
+        src={cover}
+        alt=""
+        widths={[400, 800]}
+        sizes="(min-width: 60rem) 22rem, 100vw"
+      />
+    ) : (
+      // 見出し画像の無い記事は OGP 画像で代替する
+      <img
+        src="/ogp.png"
+        alt=""
+        width="1200"
+        height="630"
+        loading="lazy"
+        decoding="async"
+      />
+    )}
+    {draft && <span class="draft">下書き</span>}
+  </div>
+
+  <div class="body">
+    <h3>
+      <a href={href}>{title}</a>
+    </h3>
+    <p class="description">{description}</p>
+
+    <div class="foot">
+      {tags.length > 0 && (
+        <ul class="tags">
+          {shownTags.map((tag) => (
+            <li>
+              <a href={`/tags/${tag}/`}>{tag}</a>
+            </li>
+          ))}
+          {restTags.length > 0 && (
+            <li class="rest" title={restTags.join("、")}>
+              +{restTags.length}
+            </li>
+          )}
+        </ul>
+      )}
+      <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
+    </div>
+  </div>
+</li>
+
+<style>
+  /* カード全体を押せる対象にしつつ、中のタグも個別のリンクにする。
+     リンクの入れ子はできないので、タイトルのリンクを ::after でカード全面に広げ、
+     タグだけをその上に持ち上げる。 */
+  .tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition:
+      background-color var(--speed) var(--ease),
+      border-color var(--speed) var(--ease);
+  }
+
+  /* 即応 UI: 触れた瞬間に面が一段明るくなり、タイトルが光る */
+  .tile:hover {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+  }
+
+  /* 画像はカードの縁から少し離し、額に収めたように見せる。
+     額の部分には斜線を引き、下端の線で本文と区切る */
+  .thumb {
+    position: relative;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    /* 線の色は境界線を半分透かしたもの。4px ごとに 1px の線を引く */
+    background-image: repeating-linear-gradient(
+      135deg,
+      color-mix(in oklch, var(--border) 25%, transparent) 0 1px,
+      transparent 1px 5px
+    );
+  }
+
+  .thumb img {
+    width: 100%;
+    aspect-ratio: 1200 / 630;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .draft {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: var(--accent-surface);
+    border-radius: var(--radius);
+    padding: 0.1rem 0.45rem;
+  }
+
+  .body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.15rem 1.1rem;
+  }
+
+  /* 長いタイトルは 1 行で切る。全文は記事ページで読める */
+  h3 {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  h3 a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--speed) var(--ease);
+  }
+
+  h3 a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .tile:hover h3 a {
+    color: var(--accent);
+  }
+
+  h3 a:focus-visible {
+    outline: none;
+  }
+
+  .tile:has(h3 a:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .description {
+    margin-top: 0.4rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.8;
+    /* 2 行で切り、短い説明文でも 2 行分の高さを取る */
+    min-height: calc(2 * 1.8em);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+
+  /* 説明文の長さが揃わなくても、タグと日付の行はカードの底に揃える */
+  .foot {
+    margin-top: auto;
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  /* タグは 1 行に収める。入りきらないときはタグ名を縮め、件数は縮めない */
+  .tags {
+    --tag-height: 1.4rem;
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .tags li {
+    display: flex;
+    min-width: 0;
+  }
+
+  .tags a,
+  .rest {
+    height: var(--tag-height);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    /* 上下の枠線の分を引いて、文字を枠の中央に置く */
+    line-height: calc(var(--tag-height) - 2px);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0 0.45rem;
+    white-space: nowrap;
+  }
+
+  .rest {
+    flex-shrink: 0;
+    cursor: default;
+  }
+
+  .tags a {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    transition:
+      color var(--speed) var(--ease),
+      border-color var(--speed) var(--ease),
+      background-color var(--speed) var(--ease);
+  }
+
+  .tags a:hover {
+    color: var(--accent);
+    border-color: var(--accent-surface);
+    background: var(--accent-surface);
+  }
+
+  time {
+    /* タグが無い記事でも日付は右に寄せる */
+    margin-left: auto;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+</style>

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PostCard from "../components/PostCard.astro";
+import PostTile from "../components/PostTile.astro";
 import { getPosts } from "../lib/posts";
 
 const posts = (await getPosts()).slice(0, 3);
@@ -52,7 +52,7 @@ const posts = (await getPosts()).slice(0, 3);
       </div>
       <ul class="posts">
         {posts.map((post) => (
-          <PostCard post={post} />
+          <PostTile post={post} />
         ))}
       </ul>
     </section>
@@ -235,9 +235,17 @@ const posts = (await getPosts()).slice(0, 3);
     color: var(--accent);
   }
 
+  /* 最近の記事は横に 3 枚並べる。狭い画面では縦に積む */
   .posts {
     margin-top: 1.5rem;
     display: grid;
     gap: 1.25rem;
+  }
+
+  /* 60rem 未満で 3 列にすると、カードが狭すぎてタイトルやタグが読めない */
+  @media (min-width: 60rem) {
+    .posts {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 </style>
