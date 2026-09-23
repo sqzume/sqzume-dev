@@ -45,7 +45,7 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
             </span>
           </>
         )}
-        {post.data.draft && <span class="draft">下書き</span>}
+        {post.data.draft && <span class="draft">Draft</span>}
       </div>
     </header>
 
@@ -57,8 +57,8 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
       {(toc.length > 1 || post.data.tags.length > 0) && (
         <aside class="side">
           {toc.length > 1 && (
-            <nav class="box toc" aria-label="目次">
-              <p class="box-title">目次</p>
+            <nav class="box toc" aria-label="On This Page">
+              <p class="box-title">On This Page</p>
               <ul>
                 {toc.map((h) => (
                   <li class={h.depth === 3 ? "nested" : undefined}>
@@ -70,7 +70,7 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
           )}
           {post.data.tags.length > 0 && (
             <div class="box">
-              <p class="box-title">タグ</p>
+              <p class="box-title">Tags</p>
               <ul class="tags">
                 {post.data.tags.map((tag) => (
                   <li>
@@ -86,7 +86,7 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
     <footer class="foot">
       <a href="/blog/" class="back">
-        &larr; 記事一覧へ
+        &larr; All Posts
       </a>
     </footer>
   </article>
@@ -199,6 +199,7 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     line-height: var(--box-title-height);
     color: var(--text-muted);
     letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   .toc ul {

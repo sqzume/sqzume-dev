@@ -12,7 +12,7 @@ const posts = (await getPosts()).slice(0, 3);
 >
   <section class="hero">
     <div class="hero-main">
-      <p class="eyebrow">個人サイト</p>
+      <p class="eyebrow">Personal Site</p>
 
       <h1 class="name">
         sqzume<span class="dot">.</span>dev
@@ -27,7 +27,7 @@ const posts = (await getPosts()).slice(0, 3);
 
       <div class="actions">
         <a href="/blog/" class="action primary">
-          ブログを読む
+          View Blog
           <span aria-hidden="true">&rarr;</span>
         </a>
         <a href="https://github.com/sqzume" class="action" rel="me noopener">
@@ -45,9 +45,9 @@ const posts = (await getPosts()).slice(0, 3);
   {posts.length > 0 && (
     <section class="recent">
       <div class="recent-head">
-        <h2>最近の記事</h2>
+        <h2>Latest Posts</h2>
         <a href="/blog/" class="more">
-          すべて見る
+          View All
         </a>
       </div>
       <ul class="posts">

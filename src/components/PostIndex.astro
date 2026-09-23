@@ -27,15 +27,15 @@ const tags = [...counts].sort(
 <!-- 記事の一覧。左にタグ、右に記事を 1 行ずつ並べる。
      ブログ一覧とタグページで共通。 -->
 <div class="index">
-  <nav class="tag-nav" aria-label="タグ">
-    <p class="nav-title">タグ</p>
+  <nav class="tag-nav" aria-label="Tags">
+    <p class="nav-title">Tags</p>
     <ul>
       <li>
         <a
           href="/blog/"
           aria-current={currentTag === undefined ? "page" : undefined}
         >
-          すべて
+          All Posts
           <span class="count">{allPosts.length}</span>
         </a>
       </li>
@@ -61,7 +61,7 @@ const tags = [...counts].sort(
         ))}
       </ul>
     ) : (
-      <p class="empty">まだ記事がありません。</p>
+      <p class="empty">No posts yet.</p>
     )}
   </div>
 </div>
@@ -84,6 +84,7 @@ const tags = [...counts].sort(
     font-family: var(--font-mono);
     font-size: 0.72rem;
     letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--text-muted);
     padding-inline: 0.9rem;
     margin-bottom: 0.6rem;

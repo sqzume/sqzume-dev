@@ -7,14 +7,11 @@ const posts = await getPosts();
 ---
 
 <BaseLayout
-  title="ブログ"
+  title="Blog"
   description="sqzume が書いた記事の一覧。技術のことも、そうでないことも。"
 >
-  <h1 class="page-title">ブログ</h1>
-  <p class="lede">
-    日頃やっていることを書いています。
-    {posts.length > 0 && `全 ${posts.length} 件。`}
-  </p>
+  <h1 class="page-title">Blog</h1>
+  <p class="lede">日頃やっていることを書いています。</p>
 
   <PostIndex posts={posts} />
 </BaseLayout>

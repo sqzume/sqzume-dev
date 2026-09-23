@@ -18,7 +18,7 @@ const { title, pubDate, tags, draft } = post.data;
   <h2>
     <a href={`/blog/${post.id}/`}>{title}</a>
   </h2>
-  {draft && <span class="draft">下書き</span>}
+  {draft && <span class="draft">Draft</span>}
   <span class="leader" aria-hidden="true"></span>
   <div class="tags">
     <PostTags tags={tags} />

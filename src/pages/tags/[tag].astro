@@ -26,18 +26,20 @@ const { tag, posts } = Astro.props;
 ---
 
 <BaseLayout
-  title={`タグ: ${tag}`}
+  title={`Tag: ${tag}`}
   description={`「${tag}」タグが付いた記事の一覧。`}
 >
-  <p class="eyebrow">タグ</p>
+  <p class="eyebrow">Tag</p>
   <h1 class="page-title">{tag}</h1>
-  <p class="lede">{posts.length} 件の記事</p>
+  <p class="lede">
+    {posts.length} {posts.length === 1 ? "post" : "posts"}
+  </p>
 
   <PostIndex posts={posts} currentTag={tag} />
 
   <p class="back-wrap">
     <a href="/blog/" class="back">
-      &larr; すべての記事へ
+      &larr; All Posts
     </a>
   </p>
 </BaseLayout>
