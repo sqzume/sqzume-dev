@@ -290,6 +290,16 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     font-weight: 700;
   }
 
+  /* 本文のリンクは白い文字に薄いアクセント色の下線で示し、
+     触れたときだけ文字もアクセント色にする。本文中で色が強く出すぎないように */
+  .prose :global(a) {
+    color: var(--text-strong);
+  }
+
+  .prose :global(a:hover) {
+    color: var(--accent);
+  }
+
   .prose :global(ul) {
     list-style: none;
     display: grid;
