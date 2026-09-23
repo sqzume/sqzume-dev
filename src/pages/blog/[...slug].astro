@@ -28,13 +28,22 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     <header class="head">
       <h1>{post.data.title}</h1>
       <div class="meta">
-        <time datetime={isoDate(post.data.pubDate)}>
-          {formatDate(post.data.pubDate)}
-        </time>
+        <span>
+          Published:{" "}
+          <time datetime={isoDate(post.data.pubDate)}>
+            {formatDate(post.data.pubDate)}
+          </time>
+        </span>
         {post.data.updatedDate && (
-          <span class="updated">
-            {formatDate(post.data.updatedDate)} に更新
-          </span>
+          <>
+            <span aria-hidden="true">/</span>
+            <span>
+              Updated:{" "}
+              <time datetime={isoDate(post.data.updatedDate)}>
+                {formatDate(post.data.updatedDate)}
+              </time>
+            </span>
+          </>
         )}
         {post.data.draft && <span class="draft">下書き</span>}
       </div>
@@ -109,10 +118,6 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--text-muted);
-  }
-
-  .updated::before {
-    content: "/ ";
   }
 
   .draft {
