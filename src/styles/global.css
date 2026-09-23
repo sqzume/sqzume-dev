@@ -112,6 +112,20 @@ pre {
   line-height: 1.7;
 }
 
+/* ── 粒子 ─────────────────────────────────────
+   SVG の feTurbulence で作ったノイズを小さいタイルで敷き詰め、
+   全ページの最前面に薄く重ねる。ヘッダーやカードの上にも同じ粒が乗る。
+   クリックは下に通す。画像ファイルも JS も使わない。 */
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+  opacity: 0.06;
+}
+
 /* ── 動きを減らす OS 設定を尊重する ──────────────
    即応 UI は「返事を返すこと」が本質なので、
    動きを止めても機能は一切損なわれない。 */

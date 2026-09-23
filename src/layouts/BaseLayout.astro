@@ -55,6 +55,8 @@ const fullTitle = title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
       <slot />
     </main>
     <Footer />
+    <!-- 画面全体に重ねる粒子。装飾なので読み上げからは外す -->
+    <div class="noise" aria-hidden="true"></div>
   </body>
 </html>
 
