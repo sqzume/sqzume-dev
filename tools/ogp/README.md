@@ -9,7 +9,8 @@ SNS で共有されたときに表示されるカード画像。全ページ共�
 
 描画には次の 2 つのフォントが必要です。
 
-- **CommitMono NL** … `src/assets/fonts/` にあるものと同じ（システムにインストール済みなら解決される）
+- **CommitMono NL**（Regular と Bold）… `src/assets/fonts/` の woff2 と同じビルドの OTF を使う。
+  システムに別ビルドの CommitMono が入っていると字形が変わるので、描画時はフォントの検索先をこの 2 つに限定する
 - **Zen Kaku Gothic New Bold** … Google Fonts の原本
   `https://github.com/google/fonts/raw/main/ofl/zenkakugothicnew/ZenKakuGothicNew-Bold.ttf`
 

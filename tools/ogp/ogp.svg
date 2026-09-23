@@ -18,7 +18,7 @@
 
   <text x="112" y="196" fill="#898c92" font-family="Zen Kaku Gothic New" font-weight="700" font-size="24" letter-spacing="6">個人サイト</text>
 
-  <text x="108" y="342" fill="#f1f2f4" font-family="Zen Kaku Gothic New" font-weight="700" font-size="132">sqzume<tspan fill="#f9bb51">.</tspan>dev</text>
+  <text x="112" y="336" fill="#f1f2f4" font-family="CommitMono NL" font-weight="700" font-size="124" style="font-feature-settings: 'ss01' 1, 'ss02' 1, 'ss04' 1, 'ss05' 1, 'calt' 1">sqzume<tspan fill="#f9bb51">.</tspan>dev</text>
 
   <rect x="112" y="400" width="60" height="2" fill="#f9bb51"/>
 
