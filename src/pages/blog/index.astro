@@ -17,7 +17,9 @@ const posts = await getPosts();
 </BaseLayout>
 
 <style>
+  /* ページ名は UI ラベルとして等幅にする。ホームの名乗りと同じ CommitMono の Bold */
   .page-title {
+    font-family: var(--font-mono);
     font-size: clamp(1.9rem, 5vw, 2.5rem);
   }
 

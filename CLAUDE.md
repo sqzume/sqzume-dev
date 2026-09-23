@@ -18,7 +18,7 @@ sqzume の個人サイト（ブログとホーム）。Astro 7 の静的サイ�
 - 和文の段落はソース上で 1 行に書く。途中で改行すると、描画時に半角スペースが入る（Markdown・`.astro` とも）。
 - 内部リンクは末尾スラッシュ付きで書く（`/blog/`）。スラッシュなしは Workers が 307 でリダイレクトする。
 - 色は `src/styles/tokens.css` の oklch トークンでだけ定義する。OGP 画像の SVG は 16 進の写しを持っているので、色かフォントを変えたら [tools/ogp/README.md](tools/ogp/README.md) の手順で再生成する。
-- 書体の割り当て: 見出しは Zen Kaku Gothic New の 700、本文は 400、UI ラベル・日付・タグ・コードは CommitMono NL。ホームの名乗り「sqzume.dev」だけは CommitMono の Bold。UI ラベルの和文字は `--font-mono` のフォールバックで自動的に Zen Kaku Gothic New になる。
+- 書体の割り当て: 見出しは Zen Kaku Gothic New の 700、本文は 400、UI ラベル・日付・タグ・コードは CommitMono NL。ホームの名乗り「sqzume.dev」と、ブログ一覧・タグページのページ名（Blog、タグ名）は CommitMono の Bold。記事のタイトルは一覧でも Zen Kaku Gothic New のまま（等幅にすると和英間のスペースが広く見える）。UI ラベルの和文字は `--font-mono` のフォールバックで自動的に Zen Kaku Gothic New になる。
 - UI 文言（ナビゲーション、ボタン、欄の見出し、下書きの印、日付など）は英語で書く。UI を英数字だけにして CommitMono で揃えるため。訳語は zed.dev に倣う（On This Page、All Posts など）。日付は `2026-09-22` の形式。記事の本文・プロフィール・説明文（description）など文章は日本語のまま。
 - 出力する JavaScript はゼロを保つ。アクセス解析（Cloudflare Web Analytics）は Cloudflare がエッジで注入するので、ビーコンのタグはコードに書かない。Workers の observability は Worker スクリプトが無い構成では何も記録しないので使っていない。
 

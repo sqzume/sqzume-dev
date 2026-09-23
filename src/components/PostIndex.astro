@@ -90,11 +90,14 @@ const tags = [...counts].sort(
     margin-bottom: 0.6rem;
   }
 
+  /* タグ名は UI ラベルとして等幅にする。
+     和文のタグ名は --font-mono のフォールバックで Zen Kaku Gothic New になる */
   .tag-nav a {
     display: flex;
     justify-content: space-between;
     gap: 0.5rem;
     padding: 0.2rem 0.9rem;
+    font-family: var(--font-mono);
     font-size: 0.85rem;
     line-height: 1.8;
     color: var(--text-muted);
