@@ -1,139 +1,140 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { formatDate, isoDate } from "../lib/format";
+import PostTags from "./PostTags.astro";
 
 interface Props {
   post: CollectionEntry<"blog">;
 }
 
 const { post } = Astro.props;
+const { title, pubDate, tags, draft } = post.data;
 ---
 
-<li class="item">
-  <a href={`/blog/${post.id}/`} class="card">
-    <time datetime={isoDate(post.data.pubDate)}>
-      {formatDate(post.data.pubDate)}
-    </time>
-    <h2>{post.data.title}</h2>
-    <p>{post.data.description}</p>
-    {post.data.draft && <span class="draft">下書き</span>}
-  </a>
-  {post.data.tags.length > 0 && (
-    <ul class="tags">
-      {post.data.tags.map((tag) => (
-        <li>
-          <a href={`/tags/${tag}/`}>{tag}</a>
-        </li>
-      ))}
-    </ul>
-  )}
+<!-- 一覧に縦に積む記事の行。タイトル・タグ・日付を 1 行にまとめる。
+     面の色では区切らず、タイトルの下線と、タイトルから右端へ引く線で 1 行ずつ独立させる。
+     長いタイトルは 1 行で切る。全文は記事ページで読める。 -->
+<li class="row">
+  <h2>
+    <a href={`/blog/${post.id}/`}>{title}</a>
+  </h2>
+  {draft && <span class="draft">下書き</span>}
+  <span class="leader" aria-hidden="true"></span>
+  <div class="tags">
+    <PostTags tags={tags} />
+  </div>
+  <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
 </li>
 
 <style>
-  .item {
+  /* 行全体を押せる対象にしつつ、中のタグも個別のリンクにする。
+     リンクの入れ子はできないので、タイトルのリンクを ::after で行全体に広げ、
+     タグだけをその上に持ち上げる（PostTags 側で持ち上げている）。 */
+  .row {
     position: relative;
-  }
-
-  /* 即応 UI: カード全体が触れる対象であることを、
-     境界とアクセントの左線で即座に示す */
-  .card {
-    display: block;
-    position: relative;
-    padding: 1.25rem 1.4rem 1.25rem;
-    background: var(--surface-1);
-    border: 1px solid var(--border);
+    /* グリッドに並べたとき、1 行に固定したタイトルの長さで行が伸びないようにする */
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid transparent;
     border-radius: var(--radius);
-    text-decoration: none;
-    color: inherit;
     transition:
       background-color var(--speed) var(--ease),
       border-color var(--speed) var(--ease);
   }
 
-  .card::before {
+  /* 即応 UI: 触れた瞬間にアクセント色の枠で囲み、内側を薄く塗る */
+  .row:hover {
+    border-color: color-mix(in oklch, var(--accent) 45%, transparent);
+    background: color-mix(in oklch, var(--accent) 6%, transparent);
+  }
+
+  /* タイトルは自分の長さだけ幅を取り、余りを右へ引く線に回す。
+     入りきらないときはタイトルのほうを縮めて「…」で切る */
+  h2 {
+    flex: 0 1 auto;
+    min-width: 0;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  h2 a {
+    color: var(--text-strong);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--accent) 30%, transparent);
+    text-underline-offset: 0.3em;
+    transition:
+      color var(--speed) var(--ease),
+      text-decoration-color var(--speed) var(--ease);
+  }
+
+  h2 a::after {
     content: "";
     position: absolute;
-    inset: -1px auto -1px -1px;
-    width: 2px;
-    background: var(--accent);
-    border-radius: var(--radius) 0 0 var(--radius);
-    opacity: 0;
-    transition: opacity var(--speed) var(--ease);
+    inset: 0;
   }
 
-  .card:hover {
-    background: var(--surface-2);
-    border-color: var(--border-strong);
-  }
-
-  .card:hover::before {
-    opacity: 1;
-  }
-
-  .card time {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--text-muted);
-  }
-
-  .card h2 {
-    font-size: 1.2rem;
-    margin-top: 0.35rem;
-    transition: color var(--speed) var(--ease);
-  }
-
-  .card:hover h2 {
+  .row:hover h2 a {
     color: var(--accent);
+    text-decoration-color: color-mix(in oklch, var(--accent) 80%, transparent);
   }
 
-  .card p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-top: 0.4rem;
-    max-width: var(--measure);
+  h2 a:focus-visible {
+    outline: none;
+  }
+
+  .row:has(h2 a:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 
   .draft {
-    position: absolute;
-    top: 1.25rem;
-    right: 1.4rem;
+    flex-shrink: 0;
     font-family: var(--font-mono);
     font-size: 0.7rem;
+    line-height: 1.6;
     color: var(--accent);
-    border: 1px solid var(--accent-surface);
     background: var(--accent-surface);
     border-radius: var(--radius);
     padding: 0.1rem 0.45rem;
   }
 
-  /* タグはカードの外に出す。カード全体がリンクなので、
-     入れ子にするとリンクの中にリンクができてしまう */
+  /* タイトルから右端のタグへ引く線。触れている間は枠があるので消す */
+  .leader {
+    flex: 1 1 0;
+    min-width: 1rem;
+    height: 1px;
+    background: color-mix(in oklch, var(--border) 70%, transparent);
+    transition: opacity var(--speed) var(--ease);
+  }
+
+  .row:hover .leader {
+    opacity: 0;
+  }
+
   .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.6rem;
-    padding-left: 0.2rem;
+    flex-shrink: 0;
+    max-width: 40%;
   }
 
-  .tags a {
-    display: inline-block;
+  time {
+    flex-shrink: 0;
     font-family: var(--font-mono);
     font-size: 0.7rem;
+    line-height: 1.6;
     color: var(--text-muted);
-    text-decoration: none;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0.1rem 0.45rem;
-    transition:
-      color var(--speed) var(--ease),
-      border-color var(--speed) var(--ease),
-      background-color var(--speed) var(--ease);
+    white-space: nowrap;
   }
 
-  .tags a:hover {
-    color: var(--accent);
-    border-color: var(--accent-surface);
-    background: var(--accent-surface);
+  /* 狭い画面ではタイトルの幅を優先し、タグは記事ページに任せる */
+  @media (max-width: 40rem) {
+    .tags {
+      display: none;
+    }
   }
 </style>

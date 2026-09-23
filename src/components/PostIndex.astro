@@ -1,0 +1,177 @@
+---
+import type { CollectionEntry } from "astro:content";
+import PostCard from "./PostCard.astro";
+import { getPosts } from "../lib/posts";
+
+interface Props {
+  /** 右側に並べる記事 */
+  posts: CollectionEntry<"blog">[];
+  /** タグページで開いているタグ。ブログ一覧では渡さない */
+  currentTag?: string;
+}
+
+const { posts, currentTag } = Astro.props;
+
+// 左側のタグ一覧は、表示中の記事ではなく全記事から作る
+const allPosts = await getPosts();
+const counts = new Map<string, number>();
+for (const tag of allPosts.flatMap((post) => post.data.tags)) {
+  counts.set(tag, (counts.get(tag) ?? 0) + 1);
+}
+// 記事の多いタグを上に。同数なら名前順
+const tags = [...counts].sort(
+  ([a, x], [b, y]) => y - x || a.localeCompare(b, "ja"),
+);
+---
+
+<!-- 記事の一覧。左にタグ、右に記事を 1 行ずつ並べる。
+     ブログ一覧とタグページで共通。 -->
+<div class="index">
+  <nav class="tag-nav" aria-label="タグ">
+    <p class="nav-title">タグ</p>
+    <ul>
+      <li>
+        <a
+          href="/blog/"
+          aria-current={currentTag === undefined ? "page" : undefined}
+        >
+          すべて
+          <span class="count">{allPosts.length}</span>
+        </a>
+      </li>
+      {tags.map(([tag, count]) => (
+        <li>
+          <a
+            href={`/tags/${tag}/`}
+            aria-current={tag === currentTag ? "page" : undefined}
+          >
+            {tag}
+            <span class="count">{count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="list">
+    {posts.length > 0 ? (
+      <ul class="posts">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </ul>
+    ) : (
+      <p class="empty">まだ記事がありません。</p>
+    )}
+  </div>
+</div>
+
+<style>
+  .index {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: 12rem minmax(0, 1fr);
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── タグ一覧 ─────────────────────────────────
+     開いているタグだけ、左線と文字をアクセント色にする */
+  .tag-nav {
+    padding-block: 1.5rem;
+  }
+
+  .nav-title {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    padding-inline: 0.9rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .tag-nav a {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.2rem 0.9rem;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-left: 1px solid transparent;
+    transition:
+      color var(--speed) var(--ease),
+      background-color var(--speed) var(--ease);
+  }
+
+  .tag-nav a:hover {
+    color: var(--text-strong);
+    background: color-mix(in oklch, var(--accent) 8%, transparent);
+  }
+
+  .tag-nav a[aria-current="page"] {
+    color: var(--accent);
+    background: color-mix(in oklch, var(--accent) 8%, transparent);
+    border-left-color: color-mix(in oklch, var(--accent) 60%, transparent);
+  }
+
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  /* ── 記事 ─────────────────────────────────── */
+  .list {
+    min-width: 0;
+    border-left: 1px solid var(--border);
+    padding: 1.25rem 0 1.25rem 1.5rem;
+  }
+
+  .posts {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .empty {
+    padding: 2.25rem 1.4rem;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  /* 狭い画面ではタグを記事の上に横並びにする */
+  @media (max-width: 48rem) {
+    .index {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tag-nav {
+      padding-block: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-title {
+      padding-inline: 0;
+    }
+
+    .tag-nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .tag-nav a {
+      border-left: none;
+      border-radius: var(--radius);
+      padding: 0.1rem 0.6rem;
+    }
+
+    .list {
+      border-left: none;
+      padding: 1rem 0;
+    }
+  }
+</style>

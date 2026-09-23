@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PostCard from "../../components/PostCard.astro";
+import PostIndex from "../../components/PostIndex.astro";
 import { getPosts } from "../../lib/posts";
 
 export async function getStaticPaths() {
@@ -33,11 +33,7 @@ const { tag, posts } = Astro.props;
   <h1 class="page-title">{tag}</h1>
   <p class="lede">{posts.length} 件の記事</p>
 
-  <ul class="posts">
-    {posts.map((post) => (
-      <PostCard post={post} />
-    ))}
-  </ul>
+  <PostIndex posts={posts} currentTag={tag} />
 
   <p class="back-wrap">
     <a href="/blog/" class="back">
@@ -65,12 +61,6 @@ const { tag, posts } = Astro.props;
     font-size: 0.9rem;
     margin-top: 0.4rem;
     font-family: var(--font-mono);
-  }
-
-  .posts {
-    margin-top: 2.5rem;
-    display: grid;
-    gap: 1.25rem;
   }
 
   .back-wrap {
