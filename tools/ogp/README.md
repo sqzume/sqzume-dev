@@ -10,8 +10,8 @@ SNS で共有されたときに表示されるカード画像。全ページ共�
 描画には次の 2 つのフォントが必要です。
 
 - **CommitMono NL** … `src/assets/fonts/` にあるものと同じ（システムにインストール済みなら解決される）
-- **Shippori Mincho SemiBold** … Google Fonts の原本
-  `https://github.com/google/fonts/raw/main/ofl/shipporimincho/ShipporiMincho-SemiBold.ttf`
+- **Zen Kaku Gothic New Bold** … Google Fonts の原本
+  `https://github.com/google/fonts/raw/main/ofl/zenkakugothicnew/ZenKakuGothicNew-Bold.ttf`
 
 両方をフォントとして解決できる状態にしたうえで:
 
