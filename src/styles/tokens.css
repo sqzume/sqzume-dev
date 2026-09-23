@@ -30,9 +30,9 @@
   --accent-surface: oklch(0.3 0.045 78);
 
   /* ── 書体 ───────────────────────────────────
-     和文書体がこのサイトの個性の主軸。
-     見出しは明朝、本文はゴシック、メタ情報は等幅で書き分ける。 */
-  --font-display: var(--font-shippori);
+     和文はゴシック（Zen Kaku Gothic New）に統一し、見出しは Bold、本文は Regular。
+     メタ情報や UI ラベルは等幅（CommitMono）で書き分ける。 */
+  --font-display: var(--font-zen-kaku);
   --font-body: var(--font-zen-kaku);
   /* CommitMono NL は和文字形を持たない。
      和文を含む要素でも書き直さずに済むよう、CSS のフォントフォールバックで

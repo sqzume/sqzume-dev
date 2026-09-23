@@ -47,7 +47,7 @@ export default defineConfig({
       },
     },
 
-    // 和文の本文
+    // 和文（見出しは 700、本文は 400）
     {
       provider: fontProviders.google(),
       name: "Zen Kaku Gothic New",
@@ -60,17 +60,6 @@ export default defineConfig({
         "Noto Sans CJK JP",
         "sans-serif",
       ],
-    },
-
-    // 見出しの明朝
-    {
-      provider: fontProviders.google(),
-      name: "Shippori Mincho",
-      cssVariable: "--font-shippori",
-      weights: [600],
-      styles: ["normal"],
-      subsets: ["japanese", "latin"],
-      fallbacks: ["Hiragino Mincho ProN", "Noto Serif CJK JP", "serif"],
     },
   ],
 });

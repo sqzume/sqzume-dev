@@ -63,7 +63,7 @@ h3,
 h4 {
   font-family: var(--font-display);
   color: var(--text-strong);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.5;
   text-wrap: balance;
 }
