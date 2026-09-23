@@ -1,0 +1,83 @@
+---
+interface Props {
+  tags: string[];
+  /** 名前を出すタグの数。残りは件数にまとめる */
+  max?: number;
+}
+
+// 実際の幅に合わせて数を決めるには JS が要るので、数で区切る。
+const { tags, max = 2 } = Astro.props;
+const shownTags = tags.slice(0, max);
+const restTags = tags.slice(max);
+---
+
+<!-- 記事のタグを 1 行に並べる。カードの中で使うので、カード全面に広げた
+     タイトルのリンクより上に持ち上げ、タグだけ個別に押せるようにする。 -->
+{tags.length > 0 && (
+  <ul class="tags">
+    {shownTags.map((tag) => (
+      <li>
+        <a href={`/tags/${tag}/`}>{tag}</a>
+      </li>
+    ))}
+    {restTags.length > 0 && (
+      <li class="rest" title={restTags.join("、")}>
+        +{restTags.length}
+      </li>
+    )}
+  </ul>
+)}
+
+<style>
+  /* タグは 1 行に収める。入りきらないときはタグ名を縮め、件数は縮めない */
+  .tags {
+    --tag-height: 1.4rem;
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  /* li に本文の行の高さが残ると、タグが下にずれて切れる */
+  .tags li {
+    display: flex;
+    min-width: 0;
+  }
+
+  .tags a,
+  .rest {
+    height: var(--tag-height);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    /* 上下の枠線の分を引いて、文字を枠の中央に置く */
+    line-height: calc(var(--tag-height) - 2px);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0 0.45rem;
+    white-space: nowrap;
+  }
+
+  .rest {
+    flex-shrink: 0;
+    cursor: default;
+  }
+
+  .tags a {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    transition:
+      color var(--speed) var(--ease),
+      border-color var(--speed) var(--ease),
+      background-color var(--speed) var(--ease);
+  }
+
+  .tags a:hover {
+    color: var(--accent);
+    border-color: var(--accent-surface);
+    background: var(--accent-surface);
+  }
+</style>

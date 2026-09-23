@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
 import { formatDate, isoDate } from "../lib/format";
+import PostTags from "./PostTags.astro";
 
 interface Props {
   post: CollectionEntry<"blog">;
@@ -10,12 +11,6 @@ interface Props {
 const { post } = Astro.props;
 const { title, description, pubDate, tags, draft, cover } = post.data;
 const href = `/blog/${post.id}/`;
-
-// タグは先頭の数個だけ出し、残りは件数にまとめる。
-// 実際の幅に合わせて数を決めるには JS が要るので、数で区切る。
-const MAX_TAGS = 2;
-const shownTags = tags.slice(0, MAX_TAGS);
-const restTags = tags.slice(MAX_TAGS);
 ---
 
 <!-- 横に並べる記事のカード。上から画像・タイトル・説明文・タグと日付。
@@ -51,20 +46,7 @@ const restTags = tags.slice(MAX_TAGS);
     <p class="description">{description}</p>
 
     <div class="foot">
-      {tags.length > 0 && (
-        <ul class="tags">
-          {shownTags.map((tag) => (
-            <li>
-              <a href={`/tags/${tag}/`}>{tag}</a>
-            </li>
-          ))}
-          {restTags.length > 0 && (
-            <li class="rest" title={restTags.join("、")}>
-              +{restTags.length}
-            </li>
-          )}
-        </ul>
-      )}
+      <PostTags tags={tags} />
       <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
     </div>
   </div>
@@ -99,7 +81,7 @@ const restTags = tags.slice(MAX_TAGS);
     position: relative;
     padding: 0.5rem;
     border-bottom: 1px solid var(--border);
-    /* 線の色は境界線を半分透かしたもの。4px ごとに 1px の線を引く */
+    /* 線の色は境界線を透かしたもの。一定の間隔で 1px の線を引く */
     background-image: repeating-linear-gradient(
       135deg,
       color-mix(in oklch, var(--border) 25%, transparent) 0 1px,
@@ -190,57 +172,6 @@ const restTags = tags.slice(MAX_TAGS);
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-  }
-
-  /* タグは 1 行に収める。入りきらないときはタグ名を縮め、件数は縮めない */
-  .tags {
-    --tag-height: 1.4rem;
-    position: relative;
-    z-index: 1;
-    min-width: 0;
-    display: flex;
-    gap: 0.35rem;
-  }
-
-  .tags li {
-    display: flex;
-    min-width: 0;
-  }
-
-  .tags a,
-  .rest {
-    height: var(--tag-height);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    /* 上下の枠線の分を引いて、文字を枠の中央に置く */
-    line-height: calc(var(--tag-height) - 2px);
-    color: var(--text-muted);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0 0.45rem;
-    white-space: nowrap;
-  }
-
-  .rest {
-    flex-shrink: 0;
-    cursor: default;
-  }
-
-  .tags a {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-decoration: none;
-    transition:
-      color var(--speed) var(--ease),
-      border-color var(--speed) var(--ease),
-      background-color var(--speed) var(--ease);
-  }
-
-  .tags a:hover {
-    color: var(--accent);
-    border-color: var(--accent-surface);
-    background: var(--accent-surface);
   }
 
   time {
