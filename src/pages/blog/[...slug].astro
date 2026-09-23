@@ -26,6 +26,7 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 >
   <article>
     <header class="head">
+      <h1>{post.data.title}</h1>
       <div class="meta">
         <time datetime={isoDate(post.data.pubDate)}>
           {formatDate(post.data.pubDate)}
@@ -37,15 +38,6 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
         )}
         {post.data.draft && <span class="draft">下書き</span>}
       </div>
-      <h1>{post.data.title}</h1>
-      <p class="description">{post.data.description}</p>
-      {post.data.tags.length > 0 && (
-        <ul class="tags">
-          {post.data.tags.map((tag) => (
-            <li>{tag}</li>
-          ))}
-        </ul>
-      )}
     </header>
 
     <div class="grid">
@@ -53,16 +45,32 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
         <Content />
       </div>
 
-      {toc.length > 1 && (
-        <aside class="toc" aria-label="目次">
-          <p class="toc-title">目次</p>
-          <ul>
-            {toc.map((h) => (
-              <li class={h.depth === 3 ? "nested" : undefined}>
-                <a href={`#${h.slug}`}>{h.text}</a>
-              </li>
-            ))}
-          </ul>
+      {(toc.length > 1 || post.data.tags.length > 0) && (
+        <aside class="side">
+          {toc.length > 1 && (
+            <nav class="box toc" aria-label="目次">
+              <p class="box-title">目次</p>
+              <ul>
+                {toc.map((h) => (
+                  <li class={h.depth === 3 ? "nested" : undefined}>
+                    <a href={`#${h.slug}`}>{h.text}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+          {post.data.tags.length > 0 && (
+            <div class="box">
+              <p class="box-title">タグ</p>
+              <ul class="tags">
+                {post.data.tags.map((tag) => (
+                  <li>
+                    <a href={`/tags/${tag}/`}>{tag}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </aside>
       )}
     </div>
@@ -82,7 +90,18 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     border-bottom: 1px solid var(--border);
   }
 
+  /* 広い画面では、タイトル・本文・目次をヘッダーの左右から一段内側に入れる。
+     区切り線は内側に入れず、ページ幅いっぱいに引く */
+  @media (min-width: 60rem) {
+    .head,
+    .grid,
+    .foot {
+      padding-inline: 2.5rem;
+    }
+  }
+
   .meta {
+    margin-top: 0.75rem;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -106,31 +125,14 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
   .head h1 {
     font-size: clamp(1.8rem, 5vw, 2.6rem);
-    margin-top: 0.6rem;
     max-width: var(--measure);
   }
 
-  .description {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    margin-top: 0.75rem;
-    max-width: var(--measure);
-  }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 1.1rem;
-  }
-
-  .tags li {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0.12rem 0.5rem;
+  /* 広い画面ではタイトルを本文の行長に縛らず、1 行で読めるようにする */
+  @media (min-width: 60rem) {
+    .head h1 {
+      max-width: none;
+    }
   }
 
   /* ── 本文と目次の配置 ───────────────────────── */
@@ -138,38 +140,64 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     margin-top: 2.5rem;
   }
 
+  /* 目次はページの右端に固定し、残りの幅をすべて本文に回す。
+     本文の行長は画面幅に合わせて伸び縮みする */
   @media (min-width: 60rem) {
     .grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 13rem;
-      gap: 3.5rem;
+      grid-template-columns: minmax(0, 1fr) 14rem;
+      gap: 3rem;
       align-items: start;
     }
+  }
 
-    .toc {
+  /* ── 目次とタグ ───────────────────────────────
+     本文の右（狭い画面では本文の下）に目次とタグを縦に積む */
+  .side {
+    display: grid;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  /* 広い画面では本文の右に置き、読み進めても付いてくるようにする */
+  @media (min-width: 60rem) {
+    .side {
       position: sticky;
       top: 5rem;
-      order: 2;
+      margin-top: 0;
     }
   }
 
-  /* ── 目次 ───────────────────────────────────── */
-  .toc {
-    border-left: 1px solid var(--border);
+  /* 左の縦線を上端で「┌」の形に曲げ、その先に見出しを載せる */
+  .box {
+    --box-title-height: 1.5rem;
+    position: relative;
     padding-left: 1rem;
-    margin-bottom: 2.5rem;
   }
 
-  .toc-title {
+  .box::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--box-title-height) / 2);
+    bottom: 0;
+    left: 0;
+    width: 0.6rem;
+    border-top: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+    border-top-left-radius: var(--radius);
+  }
+
+  .box-title {
+    margin-left: -0.2rem;
     font-family: var(--font-mono);
     font-size: 0.72rem;
+    line-height: var(--box-title-height);
     color: var(--text-muted);
     letter-spacing: 0.08em;
-    text-transform: uppercase;
   }
 
   .toc ul {
-    margin-top: 0.6rem;
+    margin-top: 0.5rem;
     display: grid;
     gap: 0.35rem;
   }
@@ -178,16 +206,48 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     padding-left: 0.9rem;
   }
 
+  /* 押せることが分かるよう、白い文字に薄いアクセント色の下線を引く */
   .toc a {
     font-size: 0.82rem;
     line-height: 1.6;
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color var(--speed) var(--ease);
+    color: var(--text-strong);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--accent) 30%, transparent);
+    text-underline-offset: 0.3em;
+    transition: text-decoration-color var(--speed) var(--ease);
   }
 
   .toc a:hover {
+    text-decoration-color: color-mix(in oklch, var(--accent) 80%, transparent);
+  }
+
+  .tags {
+    margin-top: 0.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .tags a {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.05rem 0.5rem;
+    transition:
+      color var(--speed) var(--ease),
+      border-color var(--speed) var(--ease),
+      background-color var(--speed) var(--ease);
+  }
+
+  .tags a:hover {
     color: var(--accent);
+    border-color: var(--accent-surface);
+    background: var(--accent-surface);
   }
 
   /* ── 本文の組版 ─────────────────────────────
@@ -196,6 +256,13 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
   .prose {
     max-width: var(--measure);
     font-size: 1rem;
+  }
+
+  /* 広い画面では目次の手前まで本文を広げる */
+  @media (min-width: 60rem) {
+    .prose {
+      max-width: none;
+    }
   }
 
   .prose :global(p),
